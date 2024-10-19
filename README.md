@@ -5,7 +5,8 @@
 - [PositiveCTF](https://github.com/PositiveSecurity/PositiveCTF.git)
 
 ## Install
-```
+```bash
+forge install
 ```
 
 ## Testing
