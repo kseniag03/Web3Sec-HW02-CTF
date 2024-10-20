@@ -1,10 +1,13 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.25;
 
+import {Test, console} from "../../lib/forge-std/src/Test.sol";
+
 // We added a private seed, nobody will ever learn it!
 
 contract PrivateRyan {
-    uint256 constant FACTOR = 1157920892373161954135709850086879078532699843656405640394575840079131296399;
+    uint256 constant FACTOR =
+        1157920892373161954135709850086879078532699843656405640394575840079131296399;
 
     uint256 seed = 1;
 
@@ -15,7 +18,9 @@ contract PrivateRyan {
 
     function spin(uint256 bet) public payable {
         require(msg.value >= 0.01 ether);
+        console.log("Current contract seed: ", seed);
         uint256 num = rand(100);
+        console.log("Generated contract number: ", num);
         seed = rand(256);
         if (num == bet) {
             payable(msg.sender).transfer(address(this).balance);

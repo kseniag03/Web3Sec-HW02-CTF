@@ -2,7 +2,7 @@
 pragma solidity ^0.8.25;
 
 import "./BaseTest.t.sol";
-import "src/15_PirateShip/PirateShip.sol";
+import "../src/15_PirateShip/PirateShip.sol";
 
 // forge test --match-contract PirateShipTest -vvvv
 contract PirateShipTest is BaseTest {
@@ -22,6 +22,9 @@ contract PirateShipTest is BaseTest {
     }
 
     function checkSuccess() internal view override {
-        assertTrue(instance.blackJackIsHauled() == true, "Solution is not solving the level");
+        assertTrue(
+            instance.blackJackIsHauled() == true,
+            "Solution is not solving the level"
+        );
     }
 }

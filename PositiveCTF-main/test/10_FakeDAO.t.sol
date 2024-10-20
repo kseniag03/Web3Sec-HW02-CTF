@@ -2,7 +2,7 @@
 pragma solidity ^0.8.25;
 
 import "./BaseTest.t.sol";
-import "src/10_FakeDAO/FakeDAO.sol";
+import "../src/10_FakeDAO/FakeDAO.sol";
 
 // forge test --match-contract FakeDAOTest -vvvv
 contract FakeDAOTest is BaseTest {
@@ -21,7 +21,13 @@ contract FakeDAOTest is BaseTest {
     }
 
     function checkSuccess() internal view override {
-        assertTrue(instance.owner() != owner, "Solution is not solving the level");
-        assertTrue(address(instance).balance == 0, "Solution is not solving the level");
+        assertTrue(
+            instance.owner() != owner,
+            "Solution is not solving the level"
+        );
+        assertTrue(
+            address(instance).balance == 0,
+            "Solution is not solving the level"
+        );
     }
 }

@@ -1,10 +1,13 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.25;
 
+import {Test, console} from "../../lib/forge-std/src/Test.sol";
+
 // The goal of this level is to win the lottery and hit the jackpot!
 
 contract Azino777 {
-    uint256 constant FACTOR = 1157920892373161954235709850086879078532699846656405640394575840079131296399;
+    uint256 constant FACTOR =
+        1157920892373161954235709850086879078532699846656405640394575840079131296399;
 
     constructor() payable {
         require(msg.value == 0.01 ether);
@@ -13,6 +16,7 @@ contract Azino777 {
     function spin(uint256 bet) public payable {
         require(msg.value >= 0.01 ether);
         uint256 num = rand(100);
+        console.log("Generated contract number: ", num);
         if (num == bet) {
             payable(msg.sender).transfer(address(this).balance);
         }

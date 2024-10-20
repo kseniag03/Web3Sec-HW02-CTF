@@ -1,6 +1,8 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.12;
 
+import {Test, console} from "../../lib/forge-std/src/Test.sol";
+
 // Guess number before it's generated and you will receive all the funds from contract.
 
 contract PredictTheFuture {
@@ -24,7 +26,12 @@ contract PredictTheFuture {
         require(msg.sender == player, "Wrong user");
         require(block.number > nextBlockNumber, "Need to call at next block");
 
-        uint256 answer = uint256(keccak256(abi.encodePacked(blockhash(block.number - 1), block.timestamp))) % 10;
+        uint256 answer = uint256(
+            keccak256(
+                abi.encodePacked(blockhash(block.number - 1), block.timestamp)
+            )
+        ) % 10;
+        console.log("Generated contract number: ", answer);
 
         player = address(0);
         if (guess == answer) {
