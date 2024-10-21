@@ -1,6 +1,8 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.25;
 
+import {Test, console} from "../../lib/forge-std/src/Test.sol";
+
 // This is the very first version of DAO, it will be fixed soon, have time to take all the money of the contract.
 
 import {OffchainCheckOwner} from "./OffchainCheckOwner.sol";
@@ -23,6 +25,9 @@ contract FakeDAO is OffchainCheckOwner {
         require(registered[msg.sender] == 0);
         counter += 1;
         registered[msg.sender] = counter;
+
+        console.log("Current msg.sender = ", msg.sender);
+        console.log("Current sender counter = ", registered[msg.sender]);
     }
 
     function contribute() external payable {
@@ -37,19 +42,39 @@ contract FakeDAO is OffchainCheckOwner {
     function voteForYourself() external {
         require(registered[msg.sender] != 0);
         // You can vote only once
-        require(registered[msg.sender] % border == 0 && counter / border == round + 1);
+
+        console.log("Current border = ", border);
+        console.log("Current round = ", round);
+        console.log("Current counter = ", counter);
+        console.log("Current registered counter = ", registered[msg.sender]);
+
+        require(
+            registered[msg.sender] % border == 0 &&
+                counter / border == round + 1
+        );
         emit OwnerChanged(msg.sender);
         owner = msg.sender;
         round += 1;
     }
 
-    function ownerContribute(uint8 _v, bytes32 _r, bytes32 _s, bytes32 _hash) external payable {
+    function ownerContribute(
+        uint8 _v,
+        bytes32 _r,
+        bytes32 _s,
+        bytes32 _hash
+    ) external payable {
         checkOwner(_v, _r, _s, _hash);
         require(msg.value > 0);
         emit Contributed(owner, msg.value);
     }
 
-    function changeDAOowner(uint8 _v, bytes32 _r, bytes32 _s, bytes32 _salt, address _newOwner) external {
+    function changeDAOowner(
+        uint8 _v,
+        bytes32 _r,
+        bytes32 _s,
+        bytes32 _salt,
+        address _newOwner
+    ) external {
         // add 0x01 prefix to prevent collisions with other types of messages
         uint256 value = address(this).balance;
         bytes32 hash = keccak256(abi.encode(uint8(0x01), value, _salt));
@@ -58,7 +83,13 @@ contract FakeDAO is OffchainCheckOwner {
         owner = _newOwner;
     }
 
-    function setBorder(uint8 _v, bytes32 _r, bytes32 _s, bytes32 _salt, uint256 _newBorder) external {
+    function setBorder(
+        uint8 _v,
+        bytes32 _r,
+        bytes32 _s,
+        bytes32 _salt,
+        uint256 _newBorder
+    ) external {
         // add 0x02 prefix to prevent collisions with other types of messages
         bytes32 hash = keccak256(abi.encode(uint8(0x02), _newBorder, _salt));
         checkOwner(_v, _r, _s, hash);
