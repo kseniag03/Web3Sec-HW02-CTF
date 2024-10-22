@@ -6,5 +6,5 @@ node_modules/
 lib/
 
 # Compiler files
-PositiveCTF/cache/
-PositiveCTF/out/
+PositiveCTF-main/cache/
+PositiveCTF-main/out/
